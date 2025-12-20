@@ -2,15 +2,8 @@
 {
     partial class Form3
     {
-        /// <summary>
-        /// Required designer variable.
-        /// </summary>
         private System.ComponentModel.IContainer components = null;
 
-        /// <summary>
-        /// Clean up any resources being used.
-        /// </summary>
-        /// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
         protected override void Dispose(bool disposing)
         {
             if (disposing && (components != null))
@@ -22,10 +15,6 @@
 
         #region Windows Form Designer generated code
 
-        /// <summary>
-        /// Required method for Designer support - do not modify
-        /// the contents of this method with the code editor.
-        /// </summary>
         private void InitializeComponent()
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form3));
@@ -38,7 +27,6 @@
             // btnOut
             // 
             this.btnOut.Anchor = System.Windows.Forms.AnchorStyles.None;
-            this.btnOut.BackgroundImage = global::QuanLyBanHang.Properties.Resources.c7dc6656fb6b112a043d0c74b5326084;
             this.btnOut.Image = global::QuanLyBanHang.Properties.Resources.istockphoto_878320722_2048x2048;
             this.btnOut.Location = new System.Drawing.Point(700, 300);
             this.btnOut.Name = "btnOut";
@@ -46,6 +34,7 @@
             this.btnOut.TabIndex = 0;
             this.btnOut.Text = "Thoát";
             this.btnOut.UseVisualStyleBackColor = true;
+            this.btnOut.Click += new System.EventHandler(this.btnOut_Click);
             // 
             // btnKKSL
             // 
@@ -57,6 +46,7 @@
             this.btnKKSL.TabIndex = 0;
             this.btnKKSL.Text = "Kiểm kê hàng hóa";
             this.btnKKSL.UseVisualStyleBackColor = true;
+            this.btnKKSL.Click += new System.EventHandler(this.btnKKSL_Click);
             // 
             // btnQLK
             // 
@@ -68,6 +58,7 @@
             this.btnQLK.TabIndex = 0;
             this.btnQLK.Text = "Quản lý kho";
             this.btnQLK.UseVisualStyleBackColor = true;
+            this.btnQLK.Click += new System.EventHandler(this.btnQLK_Click);
             // 
             // btnAddItean
             // 
@@ -80,6 +71,7 @@
             this.btnAddItean.TabIndex = 0;
             this.btnAddItean.Text = "Nhập hàng";
             this.btnAddItean.UseVisualStyleBackColor = true;
+            this.btnAddItean.Click += new System.EventHandler(this.btnAddItean_Click);
             // 
             // Form3
             // 
@@ -96,6 +88,7 @@
             this.Margin = new System.Windows.Forms.Padding(6, 7, 6, 7);
             this.Name = "Form3";
             this.Text = "Quản lý cửa hàng";
+            this.Load += new System.EventHandler(this.Form3_Load);
             this.ResumeLayout(false);
 
         }

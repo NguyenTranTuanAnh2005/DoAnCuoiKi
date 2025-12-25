@@ -18,30 +18,33 @@ namespace QuanLyBanHang
             // Thiết lập để Form luôn hiển thị ở chính giữa màn hình khi mở
             this.StartPosition = FormStartPosition.CenterScreen;
 
-            // Đăng ký sự kiện Load và Click cho các điều khiển nếu bạn chưa làm trong Designer
+            // Đăng ký sự kiện (để đảm bảo code chạy dù bạn quên click trong Design)
             this.Load += new System.EventHandler(this.Form6_Load);
-            this.btnoutt.Click += new System.EventHandler(this.btnoutt_Click);
+
+            // Lưu ý: Nếu nút của bạn tên khác 'btnoutt', dòng dưới sẽ báo lỗi. 
+            // Hãy đảm bảo nút Thoát tên là btnoutt hoặc sửa lại code cho khớp.
+            if (this.btnoutt != null)
+            {
+                this.btnoutt.Click += new System.EventHandler(this.btnoutt_Click);
+            }
         }
 
-        /// <summary>
-        /// Sự kiện xảy ra khi Form được nạp lên. 
-        /// Dùng để đổ dữ liệu vào DataGridView dựa trên các cột đã tạo trong Designer.
-        /// </summary>
+        // --- SỰ KIỆN LOAD FORM ---
         private void Form6_Load(object sender, EventArgs e)
         {
             try
             {
-                // Xóa các dòng cũ (nếu có) trước khi nạp dữ liệu mới
+                // 1. Xóa dữ liệu cũ
                 dataGridView1.Rows.Clear();
 
-                // Thêm dữ liệu mẫu vào bảng dựa trên các tên cột trong designer:
-                // Cột 0: IdIteam3 (Mã), Cột 1: NameIteam3 (Tên), Cột 2: SoLuong3 (Tồn), Cột 3: SoLuonDaBan (Đã bán)
+                // 2. Thêm dữ liệu mẫu
+                // Cấu trúc cột: Mã (0) | Tên (1) | Tồn kho (2) | Đã bán (3)
                 dataGridView1.Rows.Add("MH001", "Bánh ngọt ABC", "45", "120");
-                dataGridView1.Rows.Add("MH002", "Nước giải khát", "12", "350");
-                dataGridView1.Rows.Add("MH003", "Kẹo mút trái cây", "8", "210");
+                dataGridView1.Rows.Add("MH002", "Nước giải khát", "12", "350"); // Tồn 12 (<15) -> Sẽ đỏ
+                dataGridView1.Rows.Add("MH003", "Kẹo mút trái cây", "8", "210"); // Tồn 8 (<15) -> Sẽ đỏ
                 dataGridView1.Rows.Add("MH004", "Sữa tươi không đường", "60", "85");
 
-                // Gọi hàm kiểm tra cảnh báo hàng sắp hết
+                // 3. Kiểm tra và tô màu cảnh báo
                 KiemTraHangSapHet();
             }
             catch (Exception ex)
@@ -50,36 +53,59 @@ namespace QuanLyBanHang
             }
         }
 
-        /// <summary>
-        /// Xử lý sự kiện nhấn nút Thoát (btnoutt)
-        /// </summary>
+        // --- SỰ KIỆN NÚT THOÁT ---
         private void btnoutt_Click(object sender, EventArgs e)
         {
-            // Đóng Form6 để quay trở lại Form quản lý trước đó
-            this.Close();
+            this.Close(); // Đóng Form6 quay về Form3
         }
 
-        /// <summary>
-        /// Hàm bổ sung: Kiểm tra số lượng tồn kho và tô màu cảnh báo
-        /// </summary>
+        // --- HÀM TÔ MÀU CẢNH BÁO HÀNG SẮP HẾT ---
         private void KiemTraHangSapHet()
         {
-            foreach (DataGridViewRow row in dataGridView1.Rows)
+            try
             {
-                // Kiểm tra giá trị ở cột SoLuong3 (cột thứ 3 trong bảng)
-                if (row.Cells["SoLuong3"].Value != null)
+                // Tên cột số lượng tồn kho trong Design (Name)
+                string tenCotTonKho = "SoLuong3";
+
+                foreach (DataGridViewRow row in dataGridView1.Rows)
                 {
-                    int tonKho;
-                    if (int.TryParse(row.Cells["SoLuong3"].Value.ToString(), out tonKho))
+                    if (row.IsNewRow) continue; // Bỏ qua dòng trống cuối cùng
+
+                    // Lấy ô chứa giá trị tồn kho
+                    DataGridViewCell cell = null;
+
+                    // Cách 1: Tìm theo tên cột "SoLuong3"
+                    if (dataGridView1.Columns.Contains(tenCotTonKho))
                     {
-                        // Nếu số lượng tồn kho thấp hơn 15, tô màu đỏ nhạt để cảnh báo
-                        if (tonKho < 15)
+                        cell = row.Cells[tenCotTonKho];
+                    }
+                    // Cách 2: Nếu không tìm thấy tên, lấy theo thứ tự (Cột thứ 3 -> index 2)
+                    else
+                    {
+                        if (row.Cells.Count > 2) cell = row.Cells[2];
+                    }
+
+                    // Xử lý kiểm tra giá trị
+                    if (cell != null && cell.Value != null)
+                    {
+                        int tonKho;
+                        // Chuyển đổi dữ liệu sang số nguyên
+                        if (int.TryParse(cell.Value.ToString(), out tonKho))
                         {
-                            row.DefaultCellStyle.BackColor = Color.MistyRose;
-                            row.DefaultCellStyle.ForeColor = Color.Red;
+                            // Nếu tồn kho < 15 thì tô màu nền hồng, chữ đỏ
+                            if (tonKho < 15)
+                            {
+                                row.DefaultCellStyle.BackColor = Color.MistyRose;
+                                row.DefaultCellStyle.ForeColor = Color.Red;
+                            }
                         }
                     }
                 }
+            }
+            catch (Exception ex)
+            {
+                // Không hiện lỗi để tránh làm phiền người dùng, chỉ ghi log nếu cần
+                Console.WriteLine("Lỗi tô màu: " + ex.Message);
             }
         }
     }
